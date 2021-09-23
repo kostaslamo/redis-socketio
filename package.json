@@ -1,0 +1,19 @@
+{
+  "name": "socket-redis-ice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "consumer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon handler.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "redis": "^4.0.0-rc.1",
+    "socketio": "^1.0.0"
+  }
+}
