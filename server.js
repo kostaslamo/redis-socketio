@@ -37,11 +37,22 @@ io.on("connection", (socket) => {
   socket.emit("WELCOME", `Welcome User ${socket.id}`);
 
   // Join one or more rooms
-  socket.on("joinRoom", ({ username, rooms }) => {
-    console.log(`${username} joining room ${rooms}`);
+  socket.on("joinRooms", ({ username, rooms }) => {
+    console.log(`${username} joining room(s) ${rooms}`);
     rooms.forEach((room) => {
       socket.join(room);
     });
+  });
+
+  socket.on("leaveRooms", () => {
+    const { rooms, id } = socket;
+    const roomIds = Object.keys(rooms).filter((el, idx) => idx !== 0); // remove first element which is always sockets room
+    if (roomIds.length > 0) {
+      console.log(`${id} leaving room(s) ${roomIds}`);
+      roomIds.forEach((room) => {
+        socket.leave(room);
+      });
+    }
   });
 
   socket.on("disconnect", () => {

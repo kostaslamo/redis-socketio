@@ -9,8 +9,15 @@ document.getElementById("submit").addEventListener("click", async () => {
       selected.push(option.value);
     }
   }
+  // firstly leave all rooms and then join selected
+  socket.emit("leaveRooms");
   // socket.emit to join a room, as joining a room is implemented in server and socket.join('roomName') uses the socket object that is returned in the callback function of io.on('connection')
-  socket.emit("joinRoom", { username: socket.id, rooms: selected });
+  socket.emit("joinRooms", { username: socket.id, rooms: selected });
+});
+
+document.getElementById("leave").addEventListener("click", async () => {
+  // firstly leave all rooms and then join selected
+  socket.emit("leaveRooms");
 });
 
 socket.on("WELCOME", (msg) => {
