@@ -27,6 +27,7 @@ app.use(express.json({ limit: "250mb" }));
 
 app.post("/pubMessage", async (req, res) => {
   const msg = JSON.stringify(req.body);
+  // Publish to redis channel "general" a stringified object
   await redisPublisher.publish("general", msg);
   res.sendStatus(200);
 });

@@ -63,8 +63,12 @@ io.on("connection", (socket) => {
 createSubscriber().then((redisSubscriber) => {
   redisSubscriber.subscribe("general", (message) => {
     const msgObj = JSON.parse(message);
-    console.log(message); // 'message'
-    io.to("en-us").emit("roomMsg", msgObj);
+    if (msgObj.data && msgObj.data.lang) {
+      // this is a message for a specific room to broadcast
+      io.to(msgObj.data.lang).emit("roomMsg", msgObj);
+    } else {
+      io.emit("message", msgObj);
+    }
   });
 });
 
