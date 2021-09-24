@@ -11,7 +11,7 @@ const redisUrl = redisLocal
   ? "redis://localhost:6379"
   : `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`;
 
-(async () => {
+const createSubscriber = async () => {
   try {
     console.log(`Connecting to Redis ${redisUrl}`);
 
@@ -35,7 +35,11 @@ const redisUrl = redisLocal
       .catch((err) => console.log(err));
 
     redisClient.on("error", (err) => console.log("Redis Client Error", err));
+
+    return subscriber;
   } catch (e) {
     console.log(`REDIS ERROR: ${e.message}`);
   }
-})();
+};
+
+module.exports = { createSubscriber };

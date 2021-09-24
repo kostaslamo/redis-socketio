@@ -4,7 +4,7 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-require("./services/redis");
+const { createSubscriber } = require("./services/redisSubscriber");
 
 const port = 4000;
 const app = express();
@@ -46,6 +46,14 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("socket disconnectd", socket.id);
+  });
+});
+
+createSubscriber().then((redisSubscriber) => {
+  redisSubscriber.subscribe("general", (message) => {
+    const msgObj = JSON.parse(message);
+    console.log(message); // 'message'
+    io.to("en-us").emit("roomMsg", msgObj.msg);
   });
 });
 
