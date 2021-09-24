@@ -1,24 +1,41 @@
 const redis = require("redis");
+const {
+  redisLocal,
+  redisUsername,
+  redisPassword,
+  redisHost,
+  redisPort,
+} = require("../config");
+
+const redisUrl = redisLocal
+  ? "redis://localhost:6379"
+  : `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`;
 
 (async () => {
-  const redisClient = redis.createClient({
-    url: "redis://localhost:6379",
-  });
+  try {
+    console.log(`Connecting to Redis ${redisUrl}`);
 
-  const subscriber = redisClient.duplicate();
+    const redisClient = redis.createClient({
+      url: redisUrl,
+    });
 
-  await redisClient.connect();
-  await subscriber.connect();
+    const subscriber = redisClient.duplicate();
 
-  redisClient
-    .ping()
-    .then((res) => console.log(`REDIS CLIENT: ${res}`))
-    .catch((err) => console.log(err));
+    await redisClient.connect();
+    await subscriber.connect();
 
-  subscriber
-    .ping()
-    .then((res) => console.log(`REDIS SUBSCRIBER: ${res}`))
-    .catch((err) => console.log(err));
+    redisClient
+      .ping()
+      .then((res) => console.log(`REDIS CLIENT: ${res}`))
+      .catch((err) => console.log(err));
 
-  redisClient.on("error", (err) => console.log("Redis Client Error", err));
+    subscriber
+      .ping()
+      .then((res) => console.log(`REDIS SUBSCRIBER: ${res}`))
+      .catch((err) => console.log(err));
+
+    redisClient.on("error", (err) => console.log("Redis Client Error", err));
+  } catch (e) {
+    console.log(`REDIS ERROR: ${e.message}`);
+  }
 })();

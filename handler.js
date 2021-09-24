@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 
+require("dotenv").config();
+
 require("./services/redis");
 
 const port = 4000;
