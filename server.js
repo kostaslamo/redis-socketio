@@ -53,7 +53,7 @@ createSubscriber().then((redisSubscriber) => {
   redisSubscriber.subscribe("general", (message) => {
     const msgObj = JSON.parse(message);
     console.log(message); // 'message'
-    io.to("en-us").emit("roomMsg", msgObj.msg);
+    io.to("en-us").emit("roomMsg", msgObj);
   });
 });
 

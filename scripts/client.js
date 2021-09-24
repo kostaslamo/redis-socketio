@@ -2,21 +2,6 @@ const apiUrl = "http://localhost:4000";
 
 const socket = io();
 
-async function postData(path = "", data = {}) {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  // Default options are marked with *
-  const body = JSON.stringify(data);
-  const reqOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body,
-    redirect: "follow",
-  };
-  const response = await fetch(`${apiUrl}/${path}`, reqOptions);
-  return response.json(); // parses JSON response into native JavaScript objects
-}
-
 document.getElementById("submit").addEventListener("click", async () => {
   const selected = [];
   for (var option of document.getElementById("languages").options) {
@@ -32,10 +17,12 @@ socket.on("WELCOME", (msg) => {
   console.log(msg);
 });
 
+// Use this type of message for all messages
 socket.on("message", (msg) => {
   console.log(msg);
 });
 
+// Use this type of message for receiving messages from room(s) the client is registered to
 socket.on("roomMsg", (msg) => {
   console.log(msg);
 });
