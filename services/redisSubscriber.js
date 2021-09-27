@@ -14,7 +14,6 @@ const redisUrl = redisLocal
 const createSubscriber = async () => {
   try {
     console.log(`Connecting to Redis ${redisUrl}`);
-
     const redisClient = redis.createClient({
       url: redisUrl,
     });
