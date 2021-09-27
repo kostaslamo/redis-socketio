@@ -34,6 +34,12 @@ const createPublisher = async () => {
       .then((res) => console.log(`REDIS PUBLISHER: ${res}`))
       .catch((err) => console.log(err));
 
+    redisClient.set(
+      "lastConnectedPublisher",
+      new Date().toISOString(),
+      redis.print
+    );
+
     redisClient.on("error", (err) => console.log("Redis Client Error", err));
 
     return publisher;

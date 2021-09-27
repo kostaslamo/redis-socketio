@@ -34,6 +34,12 @@ const createSubscriber = async () => {
       .then((res) => console.log(`REDIS SUBSCRIBER: ${res}`))
       .catch((err) => console.log(err));
 
+    redisClient.set(
+      "lastConnectedSubscriber",
+      new Date().toISOString(),
+      redis.print
+    );
+
     redisClient.on("error", (err) => console.log("Redis Client Error", err));
 
     return subscriber;
