@@ -34,7 +34,7 @@ server.listen(port, () => {
 io.on("connection", (socket) => {
   console.log("Socket connected: ", socket.id);
 
-  socket.emit("WELCOME", `Welcome User ${socket.id}`);
+  socket.emit("welcome", `Welcome User ${socket.id}`);
 
   // Join one or more rooms
   socket.on("joinRooms", ({ username, rooms }) => {
@@ -62,12 +62,13 @@ io.on("connection", (socket) => {
 
 createSubscriber().then((redisSubscriber) => {
   redisSubscriber.subscribe("general", (message) => {
+    // Handle all messages that redis subscriber receives
     const msgObj = JSON.parse(message);
+    // Check if the message should be emitted in a specific language group
     if (msgObj.data && msgObj.data.lang) {
-      // this is a message for a specific room to broadcast
       io.to(msgObj.data.lang).emit("roomMsg", msgObj);
     } else {
-      io.emit("message", msgObj);
+      io.emit("genericMessage", msgObj);
     }
   });
 });

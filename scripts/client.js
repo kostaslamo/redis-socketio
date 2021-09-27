@@ -13,23 +13,35 @@ document.getElementById("submit").addEventListener("click", async () => {
   socket.emit("leaveRooms");
   // socket.emit to join a room, as joining a room is implemented in server and socket.join('roomName') uses the socket object that is returned in the callback function of io.on('connection')
   socket.emit("joinRooms", { username: socket.id, rooms: selected });
+  addToMessages(`Welcome in ${selected.toString()} room(s)`);
 });
 
 document.getElementById("leave").addEventListener("click", async () => {
-  // firstly leave all rooms and then join selected
   socket.emit("leaveRooms");
+  addToMessages("You left all Rooms");
 });
 
-socket.on("WELCOME", (msg) => {
+function addToMessages(msg) {
+  const tag = document.createElement("p");
+  const text = document.createTextNode(msg);
+  tag.appendChild(text);
+  const element = document.getElementById("messages");
+  element.appendChild(tag);
+}
+
+socket.on("welcome", (msg) => {
   console.log(msg);
+  addToMessages(msg);
 });
 
-// Use this type of message for all messages
-socket.on("message", (msg) => {
+// Use "genericMessage" as a type for receiving messages that are broadcasted to everyone
+socket.on("genericMessage", (msg) => {
   console.log(msg);
+  addToMessages(msg);
 });
 
-// Use this type of message for receiving messages from room(s) the client is registered to
+// Use "roomMsg" as a type for receiving messages that are broadcasted only to a specific room
 socket.on("roomMsg", (msg) => {
   console.log(msg);
+  addToMessages(JSON.stringify(msg));
 });
