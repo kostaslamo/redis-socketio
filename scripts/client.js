@@ -36,12 +36,14 @@ socket.on("welcome", (msg) => {
 
 // Use "genericMessage" as a type for receiving messages that are broadcasted to everyone
 socket.on("genericMessage", (msg) => {
+  // Handle msg String and manipulate DOM
   console.log(msg);
   addToMessages(msg);
 });
 
 // Use "roomMsg" as a type for receiving messages that are broadcasted only to a specific room
 socket.on("roomMsg", (msg) => {
+  // Handle msg Object and manipulate DOM
   console.log(msg);
   addToMessages(JSON.stringify(msg));
 });

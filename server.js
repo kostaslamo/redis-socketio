@@ -73,7 +73,7 @@ createSubscriber().then((redisSubscriber) => {
   });
 });
 
-// Send message to each room
+// Send every 10 seconds a message to each room
 setInterval(() => {
   io.to("en-us").emit("roomMsg", "Your are in EN-US room");
   io.to("de").emit("roomMsg", "Your are in DE room");
