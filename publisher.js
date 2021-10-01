@@ -4,11 +4,12 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const { createPublisher } = require("./services/redisPublisher");
+const { createPublisher } = require("./services/redisPublisherV3");
 
 let redisPublisher;
 
-createPublisher().then((pub) => {
+createPublisher((err, pub) => {
+  if (err) console.log(err.message);
   redisPublisher = pub;
 });
 
@@ -25,10 +26,10 @@ app.use(
 );
 app.use(express.json({ limit: "250mb" }));
 
-app.post("/pubMessage", async (req, res) => {
+app.post("/pubMessage", (req, res) => {
   const msg = JSON.stringify(req.body);
   // Publish to redis channel "general" a stringified object
-  await redisPublisher.publish("general", msg);
+  redisPublisher.publish("general", msg);
   res.sendStatus(200);
 });
 

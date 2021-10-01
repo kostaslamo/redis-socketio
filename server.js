@@ -4,7 +4,7 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const { createSubscriber } = require("./services/redisSubscriber");
+const { createSubscriber } = require("./services/redisSubscriberV3");
 
 const port = 4000;
 const app = express();
@@ -60,15 +60,20 @@ io.on("connection", (socket) => {
   });
 });
 
-createSubscriber().then((redisSubscriber) => {
-  redisSubscriber.subscribe("general", (message) => {
-    // Handle all messages that redis subscriber receives
-    const msgObj = JSON.parse(message);
-    // Check if the message should be emitted in a specific language group
-    if (msgObj.data && msgObj.data.lang) {
-      io.to(msgObj.data.lang).emit("roomMsg", msgObj);
-    } else {
-      io.emit("genericMessage", msgObj);
+createSubscriber((err, redisSubscriber) => {
+  if (err) console.log(err.message);
+  redisSubscriber.subscribe("general");
+
+  redisSubscriber.on("message", (channel, message) => {
+    if (channel === "general") {
+      // Handle all messages that redis subscriber receives
+      const msgObj = JSON.parse(message);
+      // Check if the message should be emitted in a specific language group
+      if (msgObj.data && msgObj.data.lang) {
+        io.to(msgObj.data.lang).emit("roomMsg", msgObj);
+      } else {
+        io.emit("genericMessage", msgObj);
+      }
     }
   });
 });
